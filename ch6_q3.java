@@ -5,8 +5,8 @@ public class ch6_q3 {
         Expr expr;
 
         if(match(SLASH, STAR)) {
-            Token badOp = previous();
-            error(badOp, "Missing left-hand operand before '" + badOp.lexeme + "'.");
+            Token badOperand = previous();
+            error(badOperand, "Missing left-hand operand before '" + badOperand.lexeme + "'.");
             Expr right = unary();
             expr = right;
         } else {
@@ -47,6 +47,55 @@ public class ch6_q3 {
 
         return expr;
 
+    }
+
+    private Expr equality() {
+        Expr expr;
+
+        if(match(BANG_EQUAL, EQUAL_EQUAL)) {
+            Token badOperand = previous();
+
+            error(badOperand, "Missing left-hand operand before '" + badOperand.lexeme + "'.");
+
+            Expr right = comparison();
+
+            expr = right;
+        } else {
+            expr = comparison();
+        }
+
+        while(match(BANG_EQUAL, EQUAL_EQUAL)) {
+            Token operator = previous();
+            Expr right = comparison();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+
+    }
+
+    private Expr comparison() {
+        Expr expr;
+
+        if(match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
+            Token badOperand = previous();
+
+            error(badOperand, "Missing left-hand operand before '" + badOperand.lexeme + "',");
+
+            Expr right = term();
+
+            expr = right;
+        } else {
+            expr = term();
+        }
+
+        while(match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
+            Token operator = previous();
+            Expr right = term();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
     }
 
 }
