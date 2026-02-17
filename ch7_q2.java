@@ -1,4 +1,4 @@
-public ch7_q1 {
+public ch7_q2 {
 
     public Object visitBinaryExpr(Expr.Binary expr) {
 
